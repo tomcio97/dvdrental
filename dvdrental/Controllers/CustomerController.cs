@@ -1,5 +1,11 @@
-﻿using dvdrental.Entities;
+﻿using System.Threading.Tasks;
+using AutoMapper;
+using AutoMapper.QueryableExtensions;
+using dvdrental.Domain.Dtos;
+using dvdrental.Domain.Interfaces.Repositories;
+using dvdrental.Entities;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
@@ -9,31 +15,43 @@ namespace dvdrental.Controllers
     [ApiController]
     public class CustomerController : ControllerBase
     {
-        private readonly DvdrentalContext context;
+        private readonly ICustomerRepository customerRepository;
+        private readonly IMapper mapper;
+        private readonly IConfigurationProvider configurationProvider;
 
-        public CustomerController(DvdrentalContext context)
+        public CustomerController(ICustomerRepository customerRepository, IMapper mapper, IConfigurationProvider configurationProvider)
         {
-            this.context = context;
+            this.customerRepository = customerRepository;
+            this.mapper = mapper;
+            this.configurationProvider = configurationProvider;
         }
         // GET: api/<CustomerController>
         [HttpGet]
-        public IActionResult GetAll()
+        public async Task<IActionResult> GetAll()
         {
-            var customers = context.Customers;
-            return Ok(customers);
+            return Ok(await customerRepository.GetCustomers().ProjectTo<CustomerForReturnDto>(configurationProvider).ToListAsync());
         }
 
         // GET api/<CustomerController>/5
-        [HttpGet("{id}")]
-        public string Get(int id)
+        [HttpGet("{customerId}")]
+        public IActionResult Get(int customerId)
         {
-            return "value";
+            var customer = customerRepository.GetCustomer(customerId);
+            if(customer is null)
+            {
+                return NotFound();
+            }
+
+            return Ok(mapper.Map<CustomerForReturnDto>(customer));
         }
 
         // POST api/<CustomerController>
         [HttpPost]
-        public void Post([FromBody] string value)
+        public async Task<IActionResult> Post([FromBody] CustomerForCreation customerForCreation)
         {
+            var customerEntity = mapper.Map<Customer>(customerForCreation);
+
+            return Ok(customerEntity);
         }
 
         // PUT api/<CustomerController>/5

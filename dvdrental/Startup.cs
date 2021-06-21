@@ -1,3 +1,5 @@
+using dvdrental.Database.Repositories;
+using dvdrental.Domain.Interfaces.Repositories;
 using dvdrental.Entities;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -28,6 +30,9 @@ namespace dvdrental
             {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "dvdrental", Version = "v1" });
             });
+
+            services.AddAutoMapper(this.GetType().Assembly);
+            services.AddTransient<ICustomerRepository, CustomerRepository>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
