@@ -3,7 +3,7 @@ using AutoMapper;
 using AutoMapper.QueryableExtensions;
 using dvdrental.Domain.Dtos;
 using dvdrental.Domain.Interfaces.Repositories;
-using dvdrental.Entities;
+using dvdrental.Domain.Interfaces.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
@@ -18,12 +18,15 @@ namespace dvdrental.Controllers
         private readonly ICustomerRepository customerRepository;
         private readonly IMapper mapper;
         private readonly IConfigurationProvider configurationProvider;
+        private readonly ICustomerService customerService;
 
-        public CustomerController(ICustomerRepository customerRepository, IMapper mapper, IConfigurationProvider configurationProvider)
+        public CustomerController(ICustomerRepository customerRepository, IMapper mapper, IConfigurationProvider configurationProvider, 
+                                    ICustomerService customerService)
         {
             this.customerRepository = customerRepository;
             this.mapper = mapper;
             this.configurationProvider = configurationProvider;
+            this.customerService = customerService;
         }
         // GET: api/<CustomerController>
         [HttpGet]
@@ -47,11 +50,16 @@ namespace dvdrental.Controllers
 
         // POST api/<CustomerController>
         [HttpPost]
-        public async Task<IActionResult> Post([FromBody] CustomerForCreation customerForCreation)
+        public async Task<IActionResult> Post([FromBody] CustomerForCreationDto customerForCreation)
         {
-            var customerEntity = mapper.Map<Customer>(customerForCreation);
+            var newCustomer = await customerService.AddCustomer(customerForCreation);
 
-            return Ok(customerEntity);
+            if(newCustomer is null)
+            {
+                return BadRequest();
+            }
+
+            return Created($"api/customer/{newCustomer.CustomerId}", newCustomer);
         }
 
         // PUT api/<CustomerController>/5

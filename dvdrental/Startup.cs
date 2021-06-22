@@ -1,6 +1,8 @@
 using dvdrental.Database.Repositories;
 using dvdrental.Domain.Interfaces.Repositories;
+using dvdrental.Domain.Interfaces.Services;
 using dvdrental.Entities;
+using dvdrental.Service;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.EntityFrameworkCore;
@@ -33,6 +35,9 @@ namespace dvdrental
 
             services.AddAutoMapper(this.GetType().Assembly);
             services.AddTransient<ICustomerRepository, CustomerRepository>();
+            services.AddTransient<ICityRepository, CityRepository>();
+            services.AddTransient<ICountryRepository, CountryRepository>();
+            services.AddTransient<ICustomerService, CustomerService>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

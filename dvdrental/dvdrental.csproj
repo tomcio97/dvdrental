@@ -18,6 +18,7 @@
   <ItemGroup>
     <ProjectReference Include="..\dvdrental.Database\dvdrental.Database.csproj" />
     <ProjectReference Include="..\dvdrental.Domain\dvdrental.Domain.csproj" />
+    <ProjectReference Include="..\dvdrental.Service\dvdrental.Service.csproj" />
   </ItemGroup>
 
 </Project>
