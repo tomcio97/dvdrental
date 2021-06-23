@@ -54,11 +54,6 @@ namespace dvdrental.Controllers
         {
             var newCustomer = await customerService.AddCustomer(customerForCreation);
 
-            if(newCustomer is null)
-            {
-                return BadRequest();
-            }
-
             return Created($"api/customer/{newCustomer.CustomerId}", newCustomer);
         }
 

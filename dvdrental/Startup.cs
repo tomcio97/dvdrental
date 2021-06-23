@@ -3,6 +3,7 @@ using dvdrental.Domain.Interfaces.Repositories;
 using dvdrental.Domain.Interfaces.Services;
 using dvdrental.Entities;
 using dvdrental.Service;
+using dvdrental.Service.Middleware;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.EntityFrameworkCore;
@@ -38,6 +39,7 @@ namespace dvdrental
             services.AddTransient<ICityRepository, CityRepository>();
             services.AddTransient<ICountryRepository, CountryRepository>();
             services.AddTransient<ICustomerService, CustomerService>();
+            services.AddTransient<ErrorHandlingMiddleware>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -49,6 +51,8 @@ namespace dvdrental
                 app.UseSwagger();
                 app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "dvdrental v1"));
             }
+
+            app.UseMiddleware<ErrorHandlingMiddleware>();
 
             app.UseHttpsRedirection();
 
