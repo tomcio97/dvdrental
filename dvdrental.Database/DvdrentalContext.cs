@@ -29,7 +29,7 @@ namespace dvdrental.Entities
         public virtual DbSet<Payment> Payments { get; set; }
         public virtual DbSet<Rental> Rentals { get; set; }
         public virtual DbSet<Store> Stores { get; set; }
-        public virtual DbSet<staff> staff { get; set; }
+        public virtual DbSet<Staff> staff { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
@@ -495,7 +495,7 @@ namespace dvdrental.Entities
                     .HasConstraintName("store_manager_staff_id_fkey");
             });
 
-            modelBuilder.Entity<staff>(entity =>
+            modelBuilder.Entity<Staff>(entity =>
             {
                 entity.Property(e => e.StaffId).HasColumnName("staff_id");
 

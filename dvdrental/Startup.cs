@@ -4,6 +4,7 @@ using dvdrental.Domain.Interfaces.Services;
 using dvdrental.Entities;
 using dvdrental.Service;
 using dvdrental.Service.Middleware;
+using dvdrental.Service.Services;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.EntityFrameworkCore;
@@ -39,6 +40,10 @@ namespace dvdrental
             services.AddTransient<ICityRepository, CityRepository>();
             services.AddTransient<ICountryRepository, CountryRepository>();
             services.AddTransient<ICustomerService, CustomerService>();
+            services.AddTransient<IRentalService, RentalService>();
+            services.AddTransient<IRentalRepository, RentalRepository>();
+            services.AddTransient<IInventoryRepository, InventoryRepository>();
+            services.AddTransient<IStaffRepository, StaffRepository>();
             services.AddTransient<ErrorHandlingMiddleware>();
         }
 
